@@ -9,7 +9,7 @@ import main.MainApp;
 public class RootLayoutController {
     private MainApp go_mainApp;
 
-    public void setMainApp(MainApp mainApp) {
-        this.go_mainApp = mainApp;
+    public void setMainApp(MainApp io_mainApp) {
+        this.go_mainApp = io_mainApp;
     }
 }

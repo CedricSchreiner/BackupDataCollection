@@ -1,7 +1,6 @@
 package model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by Cedric on 22.10.2017.
@@ -13,6 +12,7 @@ public class File {
     //private ArrayList<Integer> go_child_ids;
     private String gv_fileName;
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int gv_fileId;
     private String gv_filePath;
 
@@ -21,11 +21,12 @@ public class File {
     //    go_child_ids = new ArrayList<Integer>();
     }
 
-    public int get_parent_id() {
+    @Column(name = "parent_id")
+    public int getParentId() {
         return gv_parentId;
     }
 
-    public void set_parent_id(int iv_parent_id) {
+    public void setParentId(int iv_parent_id) {
         this.gv_parentId = iv_parent_id;
     }
 
@@ -39,27 +40,30 @@ public class File {
     }
     */
 
-    public String get_file_name() {
+    @Column(name = "file_name")
+    public String getFileName() {
         return gv_fileName;
     }
 
-    public void set_file_name(String iv_file_name) {
+    public void setFileName(String iv_file_name) {
         this.gv_fileName = iv_file_name;
     }
 
-    public int get_file_id() {
+    @Column(name = "file_id")
+    public int getFileId() {
         return gv_fileId;
     }
 
-    public void set_file_id(int iv_file_id) {
+    public void setFileId(int iv_file_id) {
         this.gv_fileId = iv_file_id;
     }
 
-    public String get_file_path() {
+    @Column(name = "file_path")
+    public String getFilePath() {
         return gv_filePath;
     }
 
-    public void set_file_path(String iv_file_path) {
+    public void setFilePath(String iv_file_path) {
         this.gv_filePath = iv_file_path;
     }
 }

@@ -4,10 +4,13 @@
     <facet type="hibernate" name="Hibernate">
       <configuration>
         <datasource-map>
-          <unit-entry name="src:hibernate.cfg.xml" />
+          <unit-entry name="hibernate.cfg.xml" value="586ea339-3b8a-4b9a-8178-8f97d3b2ad7b" />
+          <unit-entry name="src:hibernate.cfg.xml" value="586ea339-3b8a-4b9a-8178-8f97d3b2ad7b" />
         </datasource-map>
-        <naming-strategy-map />
-        <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/src/hibernate.cfg.xml" />
+        <naming-strategy-map>
+          <unit-entry name="src:hibernate.cfg.xml" />
+        </naming-strategy-map>
+        <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/src/main/resources/hibernate/hibernate.cfg.xml" />
       </configuration>
     </facet>
   </component>
