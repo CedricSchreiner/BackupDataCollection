@@ -41,8 +41,8 @@ public class MainApp extends Application{
             rootLayoutController.setMainApp(this);
 
             // Show the scene containing the root layout.
-            Scene scene = new Scene(go_rootLayout);
-            go_primaryStage.setScene(scene);
+            Scene go_scene = new Scene(go_rootLayout);
+            go_primaryStage.setScene(go_scene);
             go_primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
