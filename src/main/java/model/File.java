@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.FileTypeNotDeclared;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,8 +13,6 @@ import java.util.Collection;
 @Entity
 @Table (name = "Files")
 public class File {
-    @Column(name = "parent_id")
-    private int gv_parentId;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "tag_id")
@@ -22,7 +22,7 @@ public class File {
     private String gv_fileName;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "file_id")
     private int gv_fileId;
 
@@ -37,14 +37,6 @@ public class File {
 
     public File() {
         go_tag_list = new ArrayList<Tag>();
-    }
-
-    public int getParentId() {
-        return gv_parentId;
-    }
-
-    public void setParentId(int iv_parent_id) {
-        this.gv_parentId = iv_parent_id;
     }
 
     public void addTag(Tag io_tag) {
@@ -93,7 +85,7 @@ public class File {
                 return true;
             }
         }
-        return false;
+        throw new FileTypeNotDeclared("The type \"" + iv_fileType + "\" is not declared");
     }
 
     public void setFileType(String iv_fileType) {

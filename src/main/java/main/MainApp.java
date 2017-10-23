@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.File;
+import model.Node;
 import model.Tag;
 
 import java.io.IOException;
@@ -87,15 +88,57 @@ public class MainApp extends Application{
 //        lo_session.beginTransaction();
 //
         dao.DatabaseControl dc = new DatabaseControl();
-        File lo_file = new File();
-        lo_file.setFileName("test2");
-        lo_file.setFilePath("path2");
-        lo_file.setFileType("FILE");
-        lo_file.setParentId(0);
-        Tag tag = new Tag();
-        tag.setTagText("Test Tag");
-        lo_file.addTag(tag);
-        dc.addFile(lo_file);
+//        File lo_file = new File();
+//        lo_file.setFileName("test2");
+//        lo_file.setFilePath("path2");
+//        lo_file.setFileType("FILE");
+//        Tag tag = new Tag();
+//        tag.setTagText("Test Tag");
+//        lo_file.addTag(tag);
+//        dc.addFile(lo_file);
+
+        File file1 = new File();
+        file1.setFileName("File1");
+        file1.setFileType("DIR");
+        file1.setFileDescription("Knoten der ersten File");
+        file1.setFilePath("/Destop/Test/Files");
+
+        File file2 = new File();
+        file2.setFileName("File2");
+        file2.setFileType("FILE");
+        file2.setFileDescription("Knoten der zweiten File");
+        file2.setFilePath("/Destop/Test/Files");
+
+        Tag tag1 = new Tag();
+        tag1.setTagText("erster");
+
+        Tag tag2 = new Tag();
+        tag2.setTagText("zweiter");
+
+        Tag tag3 = new Tag();
+        tag3.setTagText("dritter");
+
+        Tag tag4 = new Tag();
+        tag4.setTagText("vierter");
+
+        Node node1 = new Node();
+        Node node2 = new Node();
+
+        file1.addTag(tag1);
+        file1.addTag(tag2);
+
+        file2.addTag(tag3);
+        file2.addTag(tag4);
+
+        node1.setContent(file1);
+        node2.setContent(file2);
+
+        dc.addObject(node1);
+
+        node2.setParentId(node1.getNodeId());
+        node1.addChild(node2);
+
+        dc.addObject(node1);
 //
 //        lo_session.saveOrUpdate(lo_file);
 //

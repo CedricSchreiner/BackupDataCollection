@@ -11,19 +11,19 @@ import org.hibernate.cfg.Configuration;
  */
 public class DatabaseControl {
     private Session go_session;
+    private SessionFactory go_sessionFactory;
 
     public DatabaseControl() {
         Configuration lo_configuration = new Configuration();
         lo_configuration.configure("hibernate/hibernate.cfg.xml");
-        SessionFactory lo_sessionFactory = lo_configuration.buildSessionFactory();
-        go_session = lo_sessionFactory.openSession();
+        go_sessionFactory = lo_configuration.buildSessionFactory();
     }
 
-    public void addFile(File io_file) {
+    public void addObject(Object io_object) {
+        go_session = go_sessionFactory.openSession();
         go_session.beginTransaction();
-        go_session.saveOrUpdate(io_file);
+        go_session.saveOrUpdate(io_object);
         go_session.getTransaction().commit();
-        System.out.println(io_file.getFileId());
         go_session.close();
     }
 }
