@@ -11,9 +11,13 @@ import javafx.stage.Stage;
 import model.File;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import texts.UIMessages;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Created by Cedric on 22.10.2017.
@@ -29,9 +33,12 @@ public class MainApp extends Application{
 
     @Override
     public void start(Stage io_primaryStage) throws Exception{
-        go_primaryStage = io_primaryStage;
-        createSessionFactory();
-
+        try {
+            go_primaryStage = io_primaryStage;
+            createSessionFactory();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         initRootLayout();
         initOverview();
     }
@@ -78,13 +85,16 @@ public class MainApp extends Application{
     }
 
     private void createSessionFactory() {
-        SessionFactory lo_sessionFactory = new Configuration().configure("hibernate/hibernate.cfg.xml").buildSessionFactory();
+        Configuration lo_configuration = new Configuration();
+        lo_configuration.configure("hibernate/hibernate.cfg.xml");
+        SessionFactory lo_sessionFactory = lo_configuration.buildSessionFactory();
         Session lo_session = lo_sessionFactory.openSession();
         lo_session.beginTransaction();
 
         File lo_file = new File();
         lo_file.setFileName("test");
         lo_file.setFilePath("path");
+        lo_file.setFileType("FILE");
         lo_file.setParentId(0);
 
         lo_session.saveOrUpdate(lo_file);
@@ -93,5 +103,4 @@ public class MainApp extends Application{
         System.out.println(lo_file.getFileId());
         lo_session.close();
     }
-
 }
