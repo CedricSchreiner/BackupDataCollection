@@ -2,12 +2,16 @@ package main;
 
 import controller.OverviewController;
 import controller.RootLayoutController;
+import dao.DatabaseControl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.File;
+import model.Tag;
+
 import java.io.IOException;
 
 /**
@@ -82,11 +86,16 @@ public class MainApp extends Application{
 //        Session lo_session = lo_sessionFactory.openSession();
 //        lo_session.beginTransaction();
 //
-//        File lo_file = new File();
-//        lo_file.setFileName("test2");
-//        lo_file.setFilePath("path2");
-//        lo_file.setFileType("FILE");
-//        lo_file.setParentId(0);
+        dao.DatabaseControl dc = new DatabaseControl();
+        File lo_file = new File();
+        lo_file.setFileName("test2");
+        lo_file.setFilePath("path2");
+        lo_file.setFileType("FILE");
+        lo_file.setParentId(0);
+        Tag tag = new Tag();
+        tag.setTagText("Test Tag");
+        lo_file.addTag(tag);
+        dc.addFile(lo_file);
 //
 //        lo_session.saveOrUpdate(lo_file);
 //

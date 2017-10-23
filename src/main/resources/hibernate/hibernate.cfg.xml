@@ -36,6 +36,7 @@
 
         <!--Names the annotated entity class-->
         <mapping class="model.File"/>
+        <mapping class="model.Tag"/>
 
     </session-factory>
 

@@ -1,6 +1,8 @@
 package model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by Cedric on 22.10.2017.
@@ -12,9 +14,11 @@ public class File {
     @Column(name = "parent_id")
     private int gv_parentId;
 
-    //private ArrayList<Integer> go_child_ids;
+    @OneToMany(cascade = CascadeType.ALL)
+    private Collection<Tag> go_tag_list;
 
     @Column(name = "file_name", columnDefinition = "text")
+    @JoinTable(name = "tag_id")
     private String gv_fileName;
 
     @Id
@@ -32,7 +36,7 @@ public class File {
     private String gv_fileType;
 
     public File() {
-    //    go_child_ids = new ArrayList<Integer>();
+        go_tag_list = new ArrayList<Tag>();
     }
 
     public int getParentId() {
@@ -43,15 +47,9 @@ public class File {
         this.gv_parentId = iv_parent_id;
     }
 
-    /*
-    public ArrayList<Integer> get_child_ids() {
-        return this.go_child_ids;
+    public void addTag(Tag io_tag) {
+        go_tag_list.add(io_tag);
     }
-
-    public void set_child_ids(ArrayList<Integer> io_child_ids) {
-        this.go_child_ids = io_child_ids;
-    }
-    */
 
     public String getFileDescription() {
         return gv_fileDescription;
