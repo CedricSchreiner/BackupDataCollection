@@ -14,11 +14,11 @@ public class File {
     @Column(name = "parent_id")
     private int gv_parentId;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "tag_id")
     private Collection<Tag> go_tag_list;
 
     @Column(name = "file_name", columnDefinition = "text")
-    @JoinTable(name = "tag_id")
     private String gv_fileName;
 
     @Id
