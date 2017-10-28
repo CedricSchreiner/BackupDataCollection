@@ -29,6 +29,10 @@ public class Node {
         go_children_list = new ArrayList<Node>();
     }
 
+    public Collection<Node> getChildrenList() {
+        return this.go_children_list;
+    }
+
     public void setNodeId(int iv_node_id) {
         this.gv_node_id = iv_node_id;
     }
@@ -49,7 +53,19 @@ public class Node {
         go_children_list.add(lo_node);
     }
 
+    public void deleteChild(Node io_node) {
+        go_children_list.remove(io_node);
+    }
+
+    public int getNumberOfChilds() {
+        return go_children_list.size();
+    }
+
     public void setContent(File io_file) {
         this.go_file = io_file;
+    }
+
+    public File getContent() {
+        return this.go_file;
     }
 }
