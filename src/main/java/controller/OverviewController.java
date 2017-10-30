@@ -57,49 +57,39 @@ public class OverviewController {
         lo_directoryChooser.setTitle("Add Directory");
         lo_choosenDirectory = lo_directoryChooser.showDialog(go_stage);
         addFilesToTree(lo_choosenDirectory);
-        System.out.println(go_tree);
     }
 
 
     private void addFilesToTree(File io_file) {
+        //we have to add the child nodes of the file if the file is a direcotry
         if (io_file.isDirectory()) {
+            //add the directory itself
+            addFile(io_file, model.File.DIRECTORY);
             File[] lo_fileList = io_file.listFiles();
-
             if (lo_fileList != null) {
-                for (File lo_directoryFile : lo_fileList) {
-                    if (lo_directoryFile.isDirectory()) {
-                        System.out.println(lo_directoryFile.getAbsolutePath());
-
-                        model.File lo_file = new model.File();
-                        lo_file.setFileName(lo_directoryFile.getName());
-                        lo_file.setFilePath(lo_directoryFile.getAbsolutePath());
-                        lo_file.setFileType(model.File.DIRECTORY);
-                        //go_tree.addNode(lo_file);
-
-                        addFilesToTree(lo_directoryFile);
+                //add all files in the directory
+                for (File lo_directoryChildFile : lo_fileList) {
+                    //if the directory contains another directory, do the same for it
+                    if (lo_directoryChildFile.isDirectory()) {
+                        addFilesToTree(lo_directoryChildFile);
                     } else {
-                        model.File lo_file = new model.File();
-                        lo_file.setFileName(lo_directoryFile.getName());
-                        lo_file.setFilePath(lo_directoryFile.getAbsolutePath());
-                        lo_file.setFileType(model.File.FILE);
-                        go_tree.addNode(lo_file);
+                        //add normal file
+                        addFile(lo_directoryChildFile, model.File.FILE);
                     }
                 }
-                //add the directory itself to the tree
-                System.out.println(io_file.getAbsolutePath());
-                model.File lo_file = new model.File();
-                lo_file.setFileName(io_file.getName());
-                lo_file.setFilePath(io_file.getAbsolutePath());
-                lo_file.setFileType(model.File.DIRECTORY);
-                go_tree.addNode(lo_file);
             }
         } else {
-            System.out.println(io_file.getAbsolutePath());
-            model.File lo_file = new model.File();
-            lo_file.setFileName(io_file.getName());
-            lo_file.setFilePath(io_file.getAbsolutePath());
-            lo_file.setFileType(model.File.FILE);
-            go_tree.addNode(lo_file);
+            addFile(io_file, model.File.FILE);
         }
+    }
+
+
+    private void addFile(File io_file, String iv_type) {
+        model.File lo_file = new model.File();
+        lo_file.setFileName(io_file.getName());
+        lo_file.setFilePath(io_file.getAbsolutePath());
+        lo_file.setFileType(iv_type);
+        go_tree.addNode(lo_file);
+        System.out.println(go_tree);
     }
 }

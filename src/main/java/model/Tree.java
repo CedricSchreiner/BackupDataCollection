@@ -2,6 +2,9 @@ package model;
 
 import dao.DatabaseControl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Cedric on 24.10.2017.
  * Contains all Nodes of the Tree
@@ -21,53 +24,56 @@ public class Tree {
         go_root.setContent(lo_rootFile);
 
         go_databaseControl = new DatabaseControl();
+        go_databaseControl.addObject(go_root);
     }
 
     public void addNode(File io_new_file) {
+        String lv_rootPath;
+
         Node lo_newNode = new Node();
         lo_newNode.setContent(io_new_file);
         go_databaseControl.addObject(lo_newNode);
+        lv_rootPath = io_new_file.getFilePath();
+        lv_rootPath = lv_rootPath.substring(0, lv_rootPath.indexOf("\\"));
+       // System.out.println("New:" + io_new_file.getFilePath());
+        //System.out.println("Root: " + lv_rootPath + "\n");
+        go_root.getContent().setFilePath(lv_rootPath);
 
         addNode(go_root, lo_newNode);
+
     }
 
     private void addNode(Node io_current_node, Node io_new_node) {
+        List<Node> testList = new ArrayList<Node>();
+        boolean test = false;
         String lv_newNodePath = io_new_node.getContent().getFilePath();
         String lv_currentNodePath = io_current_node.getContent().getFilePath();
+        //This String contains only the new file name if the current node is the parent
+        String lv_parentPath = lv_newNodePath.replace(lv_currentNodePath + "\\", "");
 
-        //check if the node is a directory
-        if (io_current_node.getContent().getFileType().equals(File.DIRECTORY)) {
-            //now we need to know if the directory path is included in the path of the new node
+        //Node is the direct child of the current node
+        if (lv_parentPath.equals(io_new_node.getContent().getFileName())) {
+            //System.out.println("Direct");
+            test = true;
+            io_current_node.addChild(io_new_node);
+            io_new_node.setParentId(io_current_node.getNodeId());
 
-            if (lv_newNodePath.contains(lv_currentNodePath)) {
-                for (Node lo_child_node : io_current_node.getChildrenList()) {
-                    lo_child_node.setParentId(io_new_node.getNodeId());
-                    io_new_node.addChild(lo_child_node);
-                    io_current_node.deleteChild(lo_child_node);
+        //the current node is a indirect parent of the new node
+        //check if the children are the parents or indirect parents
+        } else if (lv_newNodePath.contains(lv_currentNodePath)) {
+            //System.out.println("Inirect");
+            for (Node lo_child_node : io_current_node.getChildrenList()) {
+                if (lv_newNodePath.contains(lo_child_node.getContent().getFilePath())) {
+                    test = true;
+                    addNode(lo_child_node, io_new_node);
                 }
             }
+        }
 
-
-            String lv_newNodePathShortend = lv_newNodePath.replace(lv_currentNodePath + '\\', "");
-            //add the file to the current node if the created path equals the name of the new file
-            if (lv_newNodePathShortend.equals(io_new_node.getContent().getFileName())) {
-                io_new_node.setParentId(io_current_node.getNodeId());
-                io_current_node.addChild(io_new_node);
-
-            } else {
-                boolean test = false;
-                for (Node lo_child_node : io_current_node.getChildrenList()) {
-                    if (lo_child_node.getContent().getFilePath().contains(lv_newNodePath)) {
-                        addNode(lo_child_node, io_new_node);
-                        test = true;
-                    }
-                }
-
-                if (!test) {
-                    io_current_node.addChild(io_new_node);
-                    io_new_node.setParentId(io_current_node.getNodeId());
-                }
-            }
+        if (!test)  {
+           // System.out.println("else");
+            io_new_node.setParentId(io_current_node.getNodeId());
+            io_current_node.addChild(io_new_node);
         }
     }
 
@@ -96,8 +102,19 @@ public class Tree {
         return false;
     }
 
+    private void print(Node io_node) {
+        System.out.println("ParentId: " + io_node.getParentId());
+        System.out.println("NodeId: " + io_node.getNodeId());
+        System.out.println("Path: " + io_node.getContent().getFilePath() + "\n");
+
+        for (Node test : io_node.getChildrenList()) {
+            print(test);
+        }
+    }
+
     public String toString() {
-        printTreeLevelOrder();
+        System.out.println("-------------------------------------");
+        print(go_root);
         return "";
     }
 }
