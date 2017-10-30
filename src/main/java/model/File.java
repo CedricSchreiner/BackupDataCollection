@@ -14,6 +14,9 @@ import java.util.Collection;
 @Table (name = "Files")
 public class File {
 
+    public static final String DIRECTORY = "DIR";
+    public static final String FILE = "FILE";
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "tag_id")
     private Collection<Tag> go_tag_list;

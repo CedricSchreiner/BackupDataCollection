@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.stage.Stage;
 import main.MainApp;
 
 /**
@@ -12,4 +13,5 @@ public class RootLayoutController {
     public void setMainApp(MainApp io_mainApp) {
         this.go_mainApp = io_mainApp;
     }
+
 }
