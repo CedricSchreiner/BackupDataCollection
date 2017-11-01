@@ -36,9 +36,6 @@ public class MainApp extends Application{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String test = "C:\\test\\hallo";
-        String sub = "C:\\test\\hallo\\test.txt";
-        String same = "C:\\test";
 
         initRootLayout();
         initOverview();

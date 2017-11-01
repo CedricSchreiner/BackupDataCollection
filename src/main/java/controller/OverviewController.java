@@ -1,6 +1,8 @@
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -25,6 +27,9 @@ public class OverviewController {
     private Tree go_tree;
 
     @FXML
+    private TreeView<String> fileTreeView;
+
+    @FXML
     private void initialize() {
         go_tree = new Tree();
     }
@@ -40,13 +45,14 @@ public class OverviewController {
     @FXML
     public void addFiles() {
         List<File> lo_choosenFiles;
-
+        go_tree.buildTree();
         FileChooser lo_fileChooser = new FileChooser();
         lo_fileChooser.setTitle("Add Files");
         lo_choosenFiles = lo_fileChooser.showOpenMultipleDialog(go_stage);
         for (File lo_file : lo_choosenFiles) {
             addFilesToTree(lo_file);
         }
+
     }
 
     @FXML
@@ -57,6 +63,14 @@ public class OverviewController {
         lo_directoryChooser.setTitle("Add Directory");
         lo_choosenDirectory = lo_directoryChooser.showDialog(go_stage);
         addFilesToTree(lo_choosenDirectory);
+        buildTree();
+
+    }
+
+    @FXML
+    private void buildTree() {
+        TreeItem<String> lo_treeItem = new TreeItem<String>(go_tree.getRoot().getFileName());
+        fileTreeView.setRoot(lo_treeItem);
     }
 
 
@@ -90,6 +104,6 @@ public class OverviewController {
         lo_file.setFilePath(io_file.getAbsolutePath());
         lo_file.setFileType(iv_type);
         go_tree.addNode(lo_file);
-        System.out.println(go_tree);
+        //System.out.println(go_tree);
     }
 }

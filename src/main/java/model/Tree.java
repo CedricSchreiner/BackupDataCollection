@@ -1,9 +1,9 @@
 package model;
 
 import dao.DatabaseControl;
+import exceptions.NoNewFileAdded;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Cedric on 24.10.2017.
@@ -12,6 +12,8 @@ import java.util.List;
 public class Tree {
     private Node go_root;
     private DatabaseControl go_databaseControl;
+    //contains all new added Files
+    private ArrayList<File> go_newFileList;
 
     public Tree() {
         /*
@@ -20,86 +22,58 @@ public class Tree {
         go_root = new Node();
         File lo_rootFile = new File();
         lo_rootFile.setFileType(File.DIRECTORY);
-        lo_rootFile.setFilePath("!!");
+        lo_rootFile.setFileName("root");
         go_root.setContent(lo_rootFile);
 
         go_databaseControl = new DatabaseControl();
         go_databaseControl.addObject(go_root);
+        go_newFileList = new ArrayList<File>();
     }
 
     public void addNode(File io_new_file) {
-        String lv_rootPath;
-
-        Node lo_newNode = new Node();
-        lo_newNode.setContent(io_new_file);
-        go_databaseControl.addObject(lo_newNode);
-        lv_rootPath = io_new_file.getFilePath();
-        lv_rootPath = lv_rootPath.substring(0, lv_rootPath.indexOf("\\"));
-       // System.out.println("New:" + io_new_file.getFilePath());
-        //System.out.println("Root: " + lv_rootPath + "\n");
-        go_root.getContent().setFilePath(lv_rootPath);
-
-        addNode(go_root, lo_newNode);
-
+        go_newFileList.add(io_new_file);
     }
 
-    private void addNode(Node io_current_node, Node io_new_node) {
-        List<Node> testList = new ArrayList<Node>();
-        boolean test = false;
-        String lv_newNodePath = io_new_node.getContent().getFilePath();
-        String lv_currentNodePath = io_current_node.getContent().getFilePath();
-        //This String contains only the new file name if the current node is the parent
-        String lv_parentPath = lv_newNodePath.replace(lv_currentNodePath + "\\", "");
+    public void buildTree() {
+        if (go_newFileList.isEmpty()) {
+            throw new NoNewFileAdded("Keine neue Datei");
+        }
 
-        //Node is the direct child of the current node
-        if (lv_parentPath.equals(io_new_node.getContent().getFileName())) {
-            //System.out.println("Direct");
-            test = true;
-            io_current_node.addChild(io_new_node);
-            io_new_node.setParentId(io_current_node.getNodeId());
+        //search the Parents
+        List<File> lo_parents = searchParents();
+        for (File test : lo_parents) {
+            System.out.println(test.getFileName());
+        }
+    }
 
-        //the current node is a indirect parent of the new node
-        //check if the children are the parents or indirect parents
-        } else if (lv_newNodePath.contains(lv_currentNodePath)) {
-            //System.out.println("Inirect");
-            for (Node lo_child_node : io_current_node.getChildrenList()) {
-                if (lv_newNodePath.contains(lo_child_node.getContent().getFilePath())) {
-                    test = true;
-                    addNode(lo_child_node, io_new_node);
+    private List<File> searchParents() {
+        List<File> lo_parents = new ArrayList<File>();
+        File lo_parent;
+        boolean lo_parentFound = false;
+
+        for (File lo_newFile : go_newFileList) {
+            for (ListIterator<File> iterator = lo_parents.listIterator(); iterator.hasNext();) {
+                lo_parent = iterator.next();
+                if (lo_parent.getFilePath().contains(lo_newFile.getFilePath())) {
+                    iterator.remove();
+                    iterator.add(lo_newFile);
+                    lo_parentFound = true;
+                } else if (lo_newFile.getFilePath().contains(lo_parent.getFilePath())) {
+                    lo_parentFound = true;
                 }
             }
-        }
 
-        if (!test)  {
-           // System.out.println("else");
-            io_new_node.setParentId(io_current_node.getNodeId());
-            io_current_node.addChild(io_new_node);
-        }
-    }
-
-    private void printTreeLevelOrder() {
-        boolean found = true;
-        int i = 1;
-        while(found) {
-            System.out.println("-------------------------------");
-            System.out.println("Depth: " + i);
-            found = printTree(go_root, i);
-            i++;
-        }
-    }
-
-    private boolean printTree(Node io_node, int iv_depth) {
-        if (iv_depth == 0) {
-            System.out.println("ParentId: " + io_node.getParentId());
-            System.out.println("NodeId: " + io_node.getNodeId());
-            System.out.println("Path: " + io_node.getContent().getFilePath() + "\n");
-            return true;
-        } else {
-            for (Node lo_child_node: io_node.getChildrenList()) {
-                printTree(lo_child_node, iv_depth - 1);
+            if (!lo_parentFound) {
+                lo_parents.add(lo_newFile);
+                lo_parentFound = false;
             }
         }
-        return false;
+
+        return lo_parents;
+    }
+
+    public File getRoot() {
+        return this.go_root.getContent();
     }
 
     private void print(Node io_node) {
@@ -114,7 +88,7 @@ public class Tree {
 
     public String toString() {
         System.out.println("-------------------------------------");
-        print(go_root);
+        //print(go_root);
         return "";
     }
 }
