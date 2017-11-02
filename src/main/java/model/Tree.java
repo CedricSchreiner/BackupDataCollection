@@ -1,5 +1,7 @@
 package model;
 
+import com.sun.javafx.scene.web.Debugger;
+import com.sun.org.apache.bcel.internal.generic.BREAKPOINT;
 import dao.DatabaseControl;
 import exceptions.NoNewFileAdded;
 
@@ -10,6 +12,7 @@ import java.util.*;
  * Contains all Nodes of the Tree
  */
 public class Tree {
+
     private Node go_root;
     private DatabaseControl go_databaseControl;
     //contains all new added Files
@@ -65,8 +68,8 @@ public class Tree {
 
             if (!lo_parentFound) {
                 lo_parents.add(lo_newFile);
-                lo_parentFound = false;
             }
+            lo_parentFound = false;
         }
 
         return lo_parents;
